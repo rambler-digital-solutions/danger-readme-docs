@@ -1,15 +1,17 @@
-require File.expand_path("../spec_helper", __FILE__)
+# frozen_string_literal: true
+
+require File.expand_path('spec_helper', __dir__)
 
 module Danger
   describe Danger::DangerReadmeDocs do
-    it "should be a plugin" do
+    it 'should be a plugin' do
       expect(Danger::DangerReadmeDocs.new(nil)).to be_a Danger::Plugin
     end
 
     #
     # You should test your custom attributes and methods here
     #
-    describe "with Dangerfile" do
+    describe 'with Dangerfile' do
       subject do
         @readme_docs.lint
         @readme_docs.status_report[:warnings]
@@ -40,7 +42,7 @@ module Danger
         let(:fake_main_readme) { '# Test' }
         let(:warnings) do
           [
-            "Please add mentions of sub readme files " \
+            'Please add mentions of sub readme files ' \
             "in main README.md:\n **spec/fixtures/README.md**"
           ]
         end
@@ -49,7 +51,7 @@ module Danger
 
         context 'when files are not readable' do
           let(:is_files_readable) { false }
-  
+
           it { is_expected.to be_empty }
         end
       end

@@ -1,22 +1,26 @@
+# frozen_string_literal: true
+
 module Danger
-  # This is your plugin class. Any attributes or methods you expose here will
-  # be available from within your Dangerfile.
+  # Check markdown files inside main README.md.
+  # Results are passed out as a string with warning.
   #
-  # To be published on the Danger plugins site, you will need to have
-  # the public interface documented. Danger uses [YARD](http://yardoc.org/)
-  # for generating documentation from your plugin source, and you can verify
-  # by running `danger plugins lint` or `bundle exec rake spec`.
+  # @example Running linter
   #
-  # You should replace these comments with a public description of your library.
+  #          # Runs a linter
+  #          readme_docs.lint
   #
-  # @example Ensure people are well warned about merging on Mondays
-  #
-  #          my_plugin.warn_on_mondays
-  #
-  # @see  Mikhail Georgievskiy/danger-readme_docs
+  # @see  https://github.com/mikhailushka
   # @tags monday, weekends, time, rattata
   #
   class DangerReadmeDocs < Plugin
+    # Lints the globbed markdown files. Will fail if changed file was not added in main README.md.
+    # Generates a `string` with warning.
+    #
+    # @param   [String] files
+    #          A globbed string which should return the files that you want to lint, defaults to nil.
+    #          if nil, modified and added files from the diff will be used.
+    # @return  [void]
+    #
     def lint
       forgotten_files = []
 
@@ -27,7 +31,7 @@ module Danger
         file_expand_path = File.path(file)
         # unless include because excludes for string available in rails >= 4.0.2
         forgotten_files << file_expand_path unless main_readme_content.include?(file_expand_path)
-        
+
         warn(warning_generator(forgotten_files)) if forgotten_files.any?
       end
     end
@@ -36,7 +40,7 @@ module Danger
 
     # memoize file content
     def main_readme_content
-      @main_readme ||= File.read('README.md')
+      @main_readme_content ||= File.read('README.md')
     end
 
     def changed_files
