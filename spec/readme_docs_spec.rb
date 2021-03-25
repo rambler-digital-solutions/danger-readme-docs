@@ -10,37 +10,49 @@ module Danger
     # You should test your custom attributes and methods here
     #
     describe "with Dangerfile" do
+      subject do
+        @readme_docs.lint
+        @readme_docs.status_report[:warnings]
+      end
+
+      let(:fake_new_readme_path) { 'spec/fixtures/README.md' }
+      let(:fake_main_readme) { '# Test \n spec/fixtures/README.md' }
+      let(:is_files_readable) { true }
+
       before do
-        @dangerfile = testing_dangerfile
-        @my_plugin = @dangerfile.readme_docs
+        @readme_docs = testing_dangerfile.readme_docs
 
-        # mock the PR data
-        # you can then use this, eg. github.pr_author, later in the spec
-        json = File.read(File.dirname(__FILE__) + '/support/fixtures/github_pr.json') # example json: `curl https://api.github.com/repos/danger/danger-plugin-template/pulls/18 > github_pr.json`
-        allow(@my_plugin.github).to receive(:pr_json).and_return(json)
+        allow(@readme_docs.git).to receive(:added_files).and_return([])
+        allow(@readme_docs.git).to receive(:modified_files).and_return([fake_new_readme_path])
+        allow(File).to receive(:read).with('README.md').and_return(fake_main_readme)
+        allow(File).to receive(:readable?).and_return(is_files_readable)
       end
 
-      # Some examples for writing tests
-      # You should replace these with your own.
+      it { is_expected.to be_empty }
 
-      it "Warns on a monday" do
-        monday_date = Date.parse("2016-07-11")
-        allow(Date).to receive(:today).and_return monday_date
+      context 'when yml file changed' do
+        let(:fake_new_readme_path) { 'spec/fixtures/some.yml' }
 
-        @my_plugin.warn_on_mondays
-
-        expect(@dangerfile.status_report[:warnings]).to eq(["Trying to merge code on a Monday"])
+        it { is_expected.to be_empty }
       end
 
-      it "Does nothing on a tuesday" do
-        monday_date = Date.parse("2016-07-12")
-        allow(Date).to receive(:today).and_return monday_date
+      context 'without mention in main README' do
+        let(:fake_main_readme) { '# Test' }
+        let(:warnings) do
+          [
+            "Please add mentions of sub readme files " \
+            "in main README.md:\n **spec/fixtures/README.md**"
+          ]
+        end
 
-        @my_plugin.warn_on_mondays
+        it { is_expected.to eq(warnings) }
 
-        expect(@dangerfile.status_report[:warnings]).to eq([])
+        context 'when files are not readable' do
+          let(:is_files_readable) { false }
+  
+          it { is_expected.to be_empty }
+        end
       end
-
     end
   end
 end
