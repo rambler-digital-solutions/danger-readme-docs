@@ -1,6 +1,6 @@
 # danger-readme_docs
 
-A description of danger-readme_docs.
+Danger plugin to validate sub README mention in main README file
 
 ## Installation
 
@@ -8,8 +8,9 @@ A description of danger-readme_docs.
 
 ## Usage
 
-    Methods and attributes from this plugin are available in
-    your `Dangerfile` under the `readme_docs` namespace.
+    Add this to your Dangerfile:
+
+    readme_docs.lint
 
 ## Development
 

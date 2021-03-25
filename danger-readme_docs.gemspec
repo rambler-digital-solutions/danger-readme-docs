@@ -8,9 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = ReadmeDocs::VERSION
   spec.authors       = ['Mikhail Georgievskiy']
   spec.email         = ['m.georgievskiy@rambler-co.ru']
-  spec.description   = %q{A short description of danger-readme_docs.}
-  spec.summary       = %q{A longer description of danger-readme_docs.}
-  spec.homepage      = 'https://github.com/Mikhail Georgievskiy/danger-readme_docs'
+  spec.summary       = %q{Danger plugin to validate sub README mention in main README file}
+  spec.homepage      = 'https://github.com/rambler-digital-solutions/danger-readme-docs'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
