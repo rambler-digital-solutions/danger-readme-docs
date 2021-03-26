@@ -46,6 +46,13 @@ module Danger
         it { is_expected.to be_empty }
       end
 
+      context 'when file name added in lower case' do
+        let(:fake_main_readme) { '# Test \n spec/fixtures/readme.md' }
+        let(:fake_new_readme_path) { 'spec/fixtures/README.md' }
+
+        it { is_expected.to be_empty }
+      end
+
       context 'without mention in main README' do
         let(:fake_main_readme) { '# Test' }
         let(:warnings) do
