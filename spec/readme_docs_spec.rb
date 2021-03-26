@@ -33,7 +33,22 @@ module Danger
       it { is_expected.to be_empty }
 
       context 'when yml file changed' do
-        let(:fake_new_readme_path) { 'spec/fixtures/some.yml' }
+        let(:fake_main_readme) { '# Test \n spec/fixtures/README.yml' }
+        let(:fake_new_readme_path) { 'spec/fixtures/readme.yml' }
+
+        it { is_expected.to be_empty }
+      end
+
+      context 'when file is not readme' do
+        let(:fake_main_readme) { '# Test' }
+        let(:fake_new_readme_path) { 'spec/fixtures/readmessio.yml' }
+
+        it { is_expected.to be_empty }
+      end
+
+      context 'when file name added in lower case' do
+        let(:fake_main_readme) { '# Test \n spec/fixtures/readme.md' }
+        let(:fake_new_readme_path) { 'spec/fixtures/README.md' }
 
         it { is_expected.to be_empty }
       end
