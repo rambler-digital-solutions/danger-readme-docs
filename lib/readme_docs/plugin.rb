@@ -29,9 +29,9 @@ module Danger
 
         file_expand_path = File.path(file)
         forgotten_files << file_expand_path unless main_readme_content.include?(file_expand_path.downcase)
-
-        warn(warning_generator(forgotten_files)) if forgotten_files.any?
       end
+
+      warn(warning_generator(forgotten_files)) if forgotten_files.any?
     end
 
     private

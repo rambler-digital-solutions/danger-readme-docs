@@ -53,16 +53,36 @@ module Danger
         it { is_expected.to be_empty }
       end
 
-      context 'without mention in main README' do
+      context 'when with multiple readmes' do
         let(:fake_main_readme) { '# Test' }
-        let(:warnings) do
+        let(:fake_new_readmes) do
           [
-            'Please add mentions of sub readme files ' \
-            "in main README.md:\n **spec/fixtures/README.md**"
+            'spec/fixtures/README.md',
+            'spec/random/README.md',
+            'random/random/README.md'
           ]
         end
+        let(:warning) do
+          'Please add mentions of sub readme files ' \
+          "in main README.md:\n **spec/fixtures/README.md<br/>" \
+          'spec/random/README.md<br/>random/random/README.md**'
+        end
 
-        it { is_expected.to eq(warnings) }
+        before do
+          allow(@readme_docs.git).to receive(:modified_files).and_return(fake_new_readmes)
+        end
+
+        it { is_expected.to eq([warning]) }
+      end
+
+      context 'without mention in main README' do
+        let(:fake_main_readme) { '# Test' }
+        let(:warning) do
+          'Please add mentions of sub readme files ' \
+          "in main README.md:\n **spec/fixtures/README.md**"
+        end
+
+        it { is_expected.to eq([warning]) }
 
         context 'when files are not readable' do
           let(:is_files_readable) { false }
